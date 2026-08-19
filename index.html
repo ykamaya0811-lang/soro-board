@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#f4f0e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="そろボード">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <title>そろタッチ｜5桁 固定珠ボード</title>
   <style>
     :root{--ink:#243149;--muted:#667085;--paper:#f7f4ed;--panel:#fffdf8;--line:#d8d2c5;--blue:#2474df;--blue2:#0d54b6;--red:#ef6a5b;--red2:#c83e35;--shadow:0 18px 50px rgba(46,42,34,.12)}
@@ -17,8 +22,8 @@
     .mark{width:38px;height:38px;border-radius:12px;background:var(--ink);display:grid;place-items:center;color:white;font-weight:900;letter-spacing:-.1em;box-shadow:0 5px 14px rgba(36,49,73,.2)}
     .titles h1{font-size:clamp(16px,2.4vw,24px);line-height:1.1;margin:0;letter-spacing:.03em}
     .titles p{font-size:11px;margin:4px 0 0;color:var(--muted);letter-spacing:.08em}
-    .reset{border:1px solid #cec7ba;background:#fff;color:var(--ink);border-radius:12px;min-height:42px;padding:0 17px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #d8d1c4;touch-action:manipulation}
-    .reset:active{transform:translateY(2px);box-shadow:0 1px 0 #d8d1c4}
+    .actions{display:flex;align-items:center;gap:8px}.action{border:1px solid #cec7ba;background:#fff;color:var(--ink);border-radius:12px;min-height:42px;padding:0 14px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #d8d1c4;touch-action:manipulation;white-space:nowrap}.action.primary{background:var(--blue);border-color:var(--blue2);color:white;box-shadow:0 3px 0 var(--blue2)}
+    .action:active{transform:translateY(2px);box-shadow:0 1px 0 #d8d1c4}.action[hidden]{display:none}
     main{width:min(1120px,100%);margin:0 auto auto;display:flex;flex-direction:column;gap:10px;min-height:0}
     .readout{background:var(--ink);color:white;border-radius:18px;padding:10px 18px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 7px 22px rgba(36,49,73,.18)}
     .readout-label{font-size:11px;font-weight:800;letter-spacing:.14em;opacity:.66}
@@ -39,8 +44,10 @@
     .bead:focus-visible{outline:4px solid #f2b84b;outline-offset:3px}
     .digit{display:grid;place-items:center;margin:5px auto 0;width:clamp(38px,5vw,56px);height:clamp(34px,4.5vw,48px);border-radius:12px;background:#f1eee7;color:var(--ink);font-size:clamp(20px,3vw,30px);font-weight:900;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 0 1px #ddd7cb}
     .hint{text-align:center;color:#7b8492;font-size:11px;line-height:1.4;margin:0}
+    dialog{border:0;border-radius:20px;padding:0;width:min(390px,calc(100% - 28px));color:var(--ink);box-shadow:0 24px 80px rgba(18,27,43,.28)}dialog::backdrop{background:rgba(21,29,43,.54);backdrop-filter:blur(3px)}.dialog-body{padding:24px}.dialog-body h2{margin:0 0 10px;font-size:21px}.dialog-body p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.7}.dialog-body .action{width:100%}
     @media (orientation:landscape) and (max-height:620px){.app{padding-top:8px;padding-bottom:8px;gap:7px}header{margin-top:0}.titles p{display:none}.mark{width:32px;height:32px}.readout{padding:7px 15px;border-radius:14px}.board{padding:8px 18px 9px}.column{grid-template-rows:auto minmax(40px,1fr) minmax(135px,3.2fr) auto}.bead{height:clamp(30px,8vh,48px)}.bead[data-value="5"]{height:clamp(32px,9vh,52px)}.digit{height:32px;font-size:21px}.hint{display:none}}
-    @media (max-width:520px) and (orientation:portrait){.app{gap:8px}.titles p{display:none}.reset{padding:0 12px}.readout{padding:9px 12px}.readout-label{display:none}.board{gap:3px;padding:10px 5px;border-radius:18px}.board:before{top:38%}.column{grid-template-rows:auto minmax(70px,1fr) minmax(285px,4fr) auto}.place{font-size:9px}.bead{width:90%;height:clamp(40px,11vw,55px)}.bead[data-value="5"]{width:94%;height:clamp(43px,12vw,60px)}.digit{width:36px;height:34px;font-size:20px}}
+    @media (max-width:640px){.action{font-size:12px;min-height:39px;padding:0 10px}.action .wide{display:none}.actions{gap:5px}}
+    @media (max-width:520px) and (orientation:portrait){.app{gap:8px}.titles p{display:none}.readout{padding:9px 12px}.readout-label{display:none}.board{gap:3px;padding:10px 5px;border-radius:18px}.board:before{top:38%}.column{grid-template-rows:auto minmax(70px,1fr) minmax(285px,4fr) auto}.place{font-size:9px}.bead{width:90%;height:clamp(40px,11vw,55px)}.bead[data-value="5"]{width:94%;height:clamp(43px,12vw,60px)}.digit{width:36px;height:34px;font-size:20px}}
     @media (prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
@@ -48,7 +55,11 @@
   <div class="app">
     <header>
       <div class="brand"><div class="mark" aria-hidden="true">そ</div><div class="titles"><h1>5桁 固定珠ボード</h1><p>珠は動かさず、タッチで ON / OFF</p></div></div>
-      <button class="reset" id="reset" type="button">すべてリセット</button>
+      <div class="actions">
+        <button class="action primary" id="install" type="button"><span class="wide">ホームに</span>追加</button>
+        <button class="action" id="fullscreen" type="button">全画面</button>
+        <button class="action" id="reset" type="button"><span class="wide">すべて</span>リセット</button>
+      </div>
     </header>
     <main>
       <section class="readout" aria-live="polite"><span class="readout-label">現在の値</span><output id="total">00000</output></section>
@@ -56,6 +67,7 @@
       <p class="hint">青い1珠は1、赤い5珠は5。もう一度タッチするとOFFになります。</p>
     </main>
   </div>
+  <dialog id="installHelp"><div class="dialog-body"><h2>ホーム画面に追加</h2><p id="installText"></p><button class="action primary" id="closeHelp" type="button">わかりました</button></div></dialog>
   <script>
     (() => {
       'use strict';
@@ -63,6 +75,7 @@
       const board = document.getElementById('board');
       const total = document.getElementById('total');
       const activePointers = new Map();
+      let installPrompt = null;
       const MOVE_LIMIT = 14;
 
       const makeBead = (column, value, index) => {
@@ -170,6 +183,31 @@
         board.querySelectorAll('.pressed').forEach(b=>b.classList.remove('pressed'));
         activePointers.clear();
       });
+      const fullscreenButton=document.getElementById('fullscreen');
+      const syncFullscreen=()=>fullscreenButton.textContent=document.fullscreenElement?'全画面を終了':'全画面';
+      fullscreenButton.addEventListener('click',async()=>{
+        try{
+          if(document.fullscreenElement) await document.exitFullscreen();
+          else if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen({navigationUI:'hide'});
+          else showInstallHelp('この端末では、ホーム画面に追加して起動するとブラウザ部分を隠して大きく表示できます。');
+        }catch(_){showInstallHelp('ブラウザのメニューから「全画面」を選んでください。');}
+      });
+      document.addEventListener('fullscreenchange',syncFullscreen);
+
+      const installButton=document.getElementById('install');
+      const installHelp=document.getElementById('installHelp');
+      const installText=document.getElementById('installText');
+      function showInstallHelp(message){installText.textContent=message;installHelp.showModal();}
+      document.getElementById('closeHelp').addEventListener('click',()=>installHelp.close());
+      installButton.addEventListener('click',async()=>{
+        if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installButton.hidden=true;return;}
+        const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+        showInstallHelp(ios?'Safari下部の共有ボタンを押し、「ホーム画面に追加」を選んでください。':'ブラウザのメニューから「ホーム画面に追加」または「アプリをインストール」を選んでください。');
+      });
+      window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;installButton.hidden=false;});
+      window.addEventListener('appinstalled',()=>{installPrompt=null;installButton.hidden=true;});
+      if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true) installButton.hidden=true;
+      if('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
       update();
     })();
   </script>
