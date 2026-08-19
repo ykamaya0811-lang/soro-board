@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>そろタッチ｜5桁 固定珠ボード</title>
+  <style>
+    :root{--ink:#243149;--muted:#667085;--paper:#f7f4ed;--panel:#fffdf8;--line:#d8d2c5;--blue:#2474df;--blue2:#0d54b6;--red:#ef6a5b;--red2:#c83e35;--shadow:0 18px 50px rgba(46,42,34,.12)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{min-height:100%;margin:0}
+    body{font-family:ui-rounded,"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% 0,#fff 0,var(--paper) 58%);overscroll-behavior:none}
+    button{font:inherit}
+    .app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}
+    header{width:min(1120px,100%);margin:auto auto 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}
+    .mark{width:38px;height:38px;border-radius:12px;background:var(--ink);display:grid;place-items:center;color:white;font-weight:900;letter-spacing:-.1em;box-shadow:0 5px 14px rgba(36,49,73,.2)}
+    .titles h1{font-size:clamp(16px,2.4vw,24px);line-height:1.1;margin:0;letter-spacing:.03em}
+    .titles p{font-size:11px;margin:4px 0 0;color:var(--muted);letter-spacing:.08em}
+    .reset{border:1px solid #cec7ba;background:#fff;color:var(--ink);border-radius:12px;min-height:42px;padding:0 17px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #d8d1c4;touch-action:manipulation}
+    .reset:active{transform:translateY(2px);box-shadow:0 1px 0 #d8d1c4}
+    main{width:min(1120px,100%);margin:0 auto auto;display:flex;flex-direction:column;gap:10px;min-height:0}
+    .readout{background:var(--ink);color:white;border-radius:18px;padding:10px 18px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 7px 22px rgba(36,49,73,.18)}
+    .readout-label{font-size:11px;font-weight:800;letter-spacing:.14em;opacity:.66}
+    #total{font-variant-numeric:tabular-nums;font-size:clamp(28px,5vw,46px);font-weight:900;line-height:1;letter-spacing:.12em}
+    .board{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(5px,1.2vw,15px);padding:clamp(12px,2.2vw,24px);background:var(--panel);border:1px solid #e2ddd3;border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+    .board:before{content:"";position:absolute;left:0;right:0;top:39.5%;height:clamp(7px,1vw,12px);background:linear-gradient(#35445f,#1f2b40);box-shadow:0 2px 5px rgba(31,43,64,.3);z-index:-1}
+    .column{position:relative;display:grid;grid-template-rows:auto minmax(52px,1fr) minmax(172px,3.2fr) auto;min-width:0;text-align:center}
+    .place{font-size:clamp(10px,1.5vw,14px);font-weight:800;color:#697386;padding-bottom:4px;white-space:nowrap}
+    .deck{position:relative;display:flex;align-items:center;justify-content:center}
+    .deck.lower{flex-direction:column;justify-content:space-evenly;padding:4px 0}
+    .rod{position:absolute;top:0;bottom:0;width:clamp(3px,.45vw,6px);left:50%;transform:translateX(-50%);border-radius:5px;background:linear-gradient(90deg,#b78645,#f0cf8b 45%,#9b6b36);z-index:-1;box-shadow:0 0 0 1px rgba(116,78,32,.15)}
+    .bead{position:relative;width:min(78%,110px);height:clamp(38px,6.5vw,68px);border:0;padding:0;border-radius:50% 50% 42% 42% / 42% 42% 58% 58%;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;background:linear-gradient(155deg,#ece7df 8%,#cfc8bc 55%,#afa79a);box-shadow:inset 0 4px 6px rgba(255,255,255,.8),inset 0 -7px 9px rgba(75,65,50,.12),0 4px 5px rgba(62,54,44,.2);transition:filter .12s,box-shadow .12s,transform .12s}
+    .bead:after{content:"";position:absolute;left:21%;right:21%;top:13%;height:18%;border-radius:50%;background:rgba(255,255,255,.42)}
+    .bead[data-value="5"]{width:min(84%,118px);height:clamp(41px,7vw,73px)}
+    .bead.on[data-value="1"]{background:linear-gradient(155deg,#70b2ff 6%,var(--blue) 52%,var(--blue2));box-shadow:inset 0 4px 7px rgba(255,255,255,.42),inset 0 -8px 10px rgba(0,38,102,.2),0 0 0 3px rgba(36,116,223,.16),0 5px 8px rgba(16,74,153,.25)}
+    .bead.on[data-value="5"]{background:linear-gradient(155deg,#ff9a8e 6%,var(--red) 52%,var(--red2));box-shadow:inset 0 4px 7px rgba(255,255,255,.4),inset 0 -8px 10px rgba(101,18,12,.18),0 0 0 3px rgba(239,106,91,.17),0 5px 8px rgba(141,42,34,.24)}
+    .bead.pressed{filter:brightness(.92);transform:scale(.95)}
+    .bead:focus-visible{outline:4px solid #f2b84b;outline-offset:3px}
+    .digit{display:grid;place-items:center;margin:5px auto 0;width:clamp(38px,5vw,56px);height:clamp(34px,4.5vw,48px);border-radius:12px;background:#f1eee7;color:var(--ink);font-size:clamp(20px,3vw,30px);font-weight:900;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 0 1px #ddd7cb}
+    .hint{text-align:center;color:#7b8492;font-size:11px;line-height:1.4;margin:0}
+    @media (orientation:landscape) and (max-height:620px){.app{padding-top:8px;padding-bottom:8px;gap:7px}header{margin-top:0}.titles p{display:none}.mark{width:32px;height:32px}.readout{padding:7px 15px;border-radius:14px}.board{padding:8px 18px 9px}.column{grid-template-rows:auto minmax(40px,1fr) minmax(135px,3.2fr) auto}.bead{height:clamp(30px,8vh,48px)}.bead[data-value="5"]{height:clamp(32px,9vh,52px)}.digit{height:32px;font-size:21px}.hint{display:none}}
+    @media (max-width:520px) and (orientation:portrait){.app{gap:8px}.titles p{display:none}.reset{padding:0 12px}.readout{padding:9px 12px}.readout-label{display:none}.board{gap:3px;padding:10px 5px;border-radius:18px}.board:before{top:38%}.column{grid-template-rows:auto minmax(70px,1fr) minmax(285px,4fr) auto}.place{font-size:9px}.bead{width:90%;height:clamp(40px,11vw,55px)}.bead[data-value="5"]{width:94%;height:clamp(43px,12vw,60px)}.digit{width:36px;height:34px;font-size:20px}}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand"><div class="mark" aria-hidden="true">そ</div><div class="titles"><h1>5桁 固定珠ボード</h1><p>珠は動かさず、タッチで ON / OFF</p></div></div>
+      <button class="reset" id="reset" type="button">すべてリセット</button>
+    </header>
+    <main>
+      <section class="readout" aria-live="polite"><span class="readout-label">現在の値</span><output id="total">00000</output></section>
+      <section class="board" id="board" aria-label="5桁の固定珠そろばん"></section>
+      <p class="hint">青い1珠は1、赤い5珠は5。もう一度タッチするとOFFになります。</p>
+    </main>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+      const places = ['万の位','千の位','百の位','十の位','一の位'];
+      const board = document.getElementById('board');
+      const total = document.getElementById('total');
+      const activePointers = new Map();
+      const MOVE_LIMIT = 14;
+
+      const makeBead = (column, value, index) => {
+        const bead = document.createElement('button');
+        bead.type = 'button';
+        bead.className = 'bead';
+        bead.dataset.column = String(column);
+        bead.dataset.value = String(value);
+        bead.dataset.index = String(index);
+        bead.setAttribute('aria-pressed','false');
+        bead.setAttribute('aria-label', `${places[column]}の${value === 5 ? '5珠' : `${index + 1}個目の1珠`}、OFF`);
+        return bead;
+      };
+
+      places.forEach((place, columnIndex) => {
+        const column = document.createElement('section');
+        column.className = 'column';
+        column.dataset.column = String(columnIndex);
+        column.innerHTML = `<div class="place">${place}</div>`;
+        const upper = document.createElement('div');
+        upper.className = 'deck upper';
+        upper.innerHTML = '<i class="rod" aria-hidden="true"></i>';
+        upper.append(makeBead(columnIndex, 5, 0));
+        const lower = document.createElement('div');
+        lower.className = 'deck lower';
+        lower.innerHTML = '<i class="rod" aria-hidden="true"></i>';
+        for (let i=0;i<4;i++) lower.append(makeBead(columnIndex, 1, i));
+        const digit = document.createElement('output');
+        digit.className = 'digit';
+        digit.textContent = '0';
+        digit.setAttribute('aria-label', `${place}の値`);
+        column.append(upper, lower, digit);
+        board.append(column);
+      });
+
+      function update(){
+        const digits = [...board.querySelectorAll('.column')].map(column => {
+          const value = [...column.querySelectorAll('.bead.on')].reduce((sum,b) => sum + Number(b.dataset.value), 0);
+          column.querySelector('.digit').textContent = String(value);
+          return value;
+        });
+        total.textContent = digits.join('');
+      }
+
+      function setBeadState(bead,on){
+        bead.classList.toggle('on',on);
+        bead.setAttribute('aria-pressed',String(on));
+        const value=Number(bead.dataset.value);
+        const name=value===5?'5珠':`${Number(bead.dataset.index)+1}個目の1珠`;
+        bead.setAttribute('aria-label',`${places[Number(bead.dataset.column)]}の${name}、${on?'ON':'OFF'}`);
+      }
+
+      function toggle(bead){
+        if(Number(bead.dataset.value)===5){
+          setBeadState(bead,!bead.classList.contains('on'));
+        }else{
+          const column=bead.closest('.column');
+          const touchedIndex=Number(bead.dataset.index);
+          const lowerBeads=[...column.querySelectorAll('.bead[data-value="1"]')];
+          const currentCount=lowerBeads.filter(b=>b.classList.contains('on')).length;
+          // 消灯中の珠ならそこまでまとめてON、点灯中の珠ならそこから下をまとめてOFF。
+          const nextCount=touchedIndex<currentCount?touchedIndex:touchedIndex+1;
+          lowerBeads.forEach((b,index)=>setBeadState(b,index<nextCount));
+        }
+        update();
+      }
+
+      board.addEventListener('pointerdown', e => {
+        const bead = e.target.closest('.bead');
+        if (!bead || activePointers.has(e.pointerId)) return;
+        e.preventDefault();
+        activePointers.set(e.pointerId,{bead,x:e.clientX,y:e.clientY,moved:false});
+        bead.classList.add('pressed');
+        try{ bead.setPointerCapture(e.pointerId); }catch(_){ }
+      });
+      board.addEventListener('pointermove', e => {
+        const p = activePointers.get(e.pointerId);
+        if (!p) return;
+        if (Math.hypot(e.clientX-p.x,e.clientY-p.y) > MOVE_LIMIT){p.moved=true;p.bead.classList.remove('pressed')}
+      });
+      const finish = (e,cancelled=false) => {
+        const p = activePointers.get(e.pointerId);
+        if (!p) return;
+        p.bead.classList.remove('pressed');
+        if (!cancelled && !p.moved) toggle(p.bead);
+        activePointers.delete(e.pointerId);
+      };
+      board.addEventListener('pointerup', e => finish(e));
+      board.addEventListener('pointercancel', e => finish(e,true));
+      board.addEventListener('lostpointercapture', e => {
+        const p=activePointers.get(e.pointerId);
+        if(p){p.bead.classList.remove('pressed');activePointers.delete(e.pointerId)}
+      });
+      document.getElementById('reset').addEventListener('click', () => {
+        activePointers.clear();
+        board.querySelectorAll('.bead').forEach(bead => {
+          bead.classList.remove('on','pressed');
+          bead.setAttribute('aria-pressed','false');
+          const value=Number(bead.dataset.value), name=value===5?'5珠':`${Number(bead.dataset.index)+1}個目の1珠`;
+          bead.setAttribute('aria-label',`${places[Number(bead.dataset.column)]}の${name}、OFF`);
+        });
+        update();
+      });
+      window.addEventListener('blur',() => {
+        board.querySelectorAll('.pressed').forEach(b=>b.classList.remove('pressed'));
+        activePointers.clear();
+      });
+      update();
+    })();
+  </script>
+</body>
+</html>
