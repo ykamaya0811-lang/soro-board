@@ -16,11 +16,20 @@
     number: { icon: '★', label: 'たまおき' },
     karuta: { icon: '▦', label: 'かるた' }
   };
-  const FLAGS = [
-    { flag: '🇯🇵', name: 'にほん', locked: false },
-    { flag: '🇫🇯', name: 'フィジー', locked: false },
-    { flag: '🇵🇼', name: 'パラオ', locked: false }
-  ];
+  const ISO_REGION_CODES = `AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW XK`.split(' ');
+  const regionNames = typeof Intl.DisplayNames === 'function' ? new Intl.DisplayNames(['ja'], { type: 'region' }) : null;
+  const SPECIAL_REGION_NAMES = { JP: 'にほん', XK: 'コソボ' };
+  const FLAGS = ISO_REGION_CODES.map(code => ({
+    code: code.toLowerCase(),
+    name: SPECIAL_REGION_NAMES[code] || regionNames?.of(code) || code,
+    locked: false
+  })).sort((a, b) => a.code === 'jp' ? -1 : b.code === 'jp' ? 1 : a.name.localeCompare(b.name, 'ja'));
+  function flagGraphic(code, name = '') {
+    return `<img src="https://flagcdn.com/${code}.svg" alt="${escapeHTML(name)}の国旗" loading="lazy" decoding="async">`;
+  }
+  function selectedFlagItem() {
+    return FLAGS.find(item => item.code === state.selectedFlag) || FLAGS.find(item => item.code === 'jp');
+  }
   const GIFTS = [
     { icon: '🌼', title: 'キラキラのお花！', message: '画面いっぱいに咲いたよ！' },
     { icon: '🐕', title: 'げんきなワンちゃん！', message: 'いっしょにダンスしているよ！' },
@@ -34,7 +43,7 @@
   const defaults = {
     name: 'ゲスト',
     stage: 'A1',
-    selectedFlag: '🇯🇵',
+    selectedFlag: 'jp',
     completed: [],
     mistakes: 0,
     totalCorrect: 0,
@@ -215,7 +224,7 @@
     setScreen(`<section class="screen mission-select">
       ${gameHeader('きょうのミッション', 'start-back')}
       <div class="today-strip"><h1>きょうのミッション</h1><p>国旗をひとつ選ぼう！</p></div>
-      <div class="world-panel"><div class="flag-grid">${FLAGS.map((item,index) => `<button class="flag-card${item.locked ? ' locked' : ''}" data-action="flag" data-index="${index}" ${item.locked ? 'disabled' : ''}><span class="flag">${item.flag}</span><strong>${item.name}</strong><small>${index === 0 ? 'おすすめ' : 'えらべるよ'}</small></button>`).join('')}</div></div>
+      <div class="world-panel"><label class="flag-search"><span>🔎</span><input id="flagSearch" type="search" placeholder="国・地域を検索" autocomplete="off"></label><div class="flag-count">${FLAGS.length}の国・地域</div><div class="flag-grid">${FLAGS.map((item,index) => `<button class="flag-card" data-action="flag" data-index="${index}" data-search="${escapeHTML((item.name + ' ' + item.code).toLowerCase())}"><span class="flag">${flagGraphic(item.code, item.name)}</span><strong>${item.name}</strong><small>${item.code.toUpperCase()}</small></button>`).join('')}</div><p class="flag-empty" hidden>見つかりませんでした</p></div>
       <div class="daily-progress"><span>きょう</span>${[0,1,2].map(i => `<i class="daily-dot${state.dailyClears > i ? ' done' : ''}"></i>`).join('')}<span>${state.dailyClears}/3面</span></div>
     </section>`);
   }
@@ -508,7 +517,8 @@
     renderFlagWin();
   }
   function renderFlagWin() {
-    setScreen(`<section class="screen flag-win star-bg"><div class="flag-win-card"><div class="big-flag">${state.selectedFlag}</div><h1>MISSION CLEAR!</h1><p>国旗GET！ A1クリア！</p><button class="continue-button" data-action="next-mission">つぎへ</button></div></section>`);
+    const flag = selectedFlagItem();
+    setScreen(`<section class="screen flag-win star-bg"><div class="flag-win-card"><div class="big-flag">${flagGraphic(flag.code, flag.name)}</div><h1>MISSION CLEAR!</h1><p>${flag.name}の国旗GET！ A1クリア！</p><button class="continue-button" data-action="next-mission">つぎへ</button></div></section>`);
     sound('flag'); confetti(150); vibrate([60,30,80,35,140]);
   }
 
@@ -554,7 +564,7 @@
     if (action === 'start-back') { renderStart(); return; }
     if (action === 'mission-select') { renderMissionSelect(); return; }
     if (action === 'map') { renderMap(); return; }
-    if (action === 'flag') { const item = FLAGS[Number(target.dataset.index)]; if (!item || item.locked) return; state.selectedFlag = item.flag; save(); sound('correct'); showLoading(renderMap,900); return; }
+    if (action === 'flag') { const item = FLAGS[Number(target.dataset.index)]; if (!item || item.locked) return; state.selectedFlag = item.code; save(); sound('correct'); showLoading(renderMap,900); return; }
     if (action === 'node') {
       const index = Number(target.dataset.index);
       if (index !== state.completed.length) { sound('wrong'); showToast(index < state.completed.length ? 'ここはクリア済み！' : '前のアイコンから進もう'); return; }
@@ -574,6 +584,19 @@
       showLoading(renderMissionSelect,850);
       return;
     }
+  });
+
+  document.addEventListener('input', event => {
+    if (event.target.id !== 'flagSearch') return;
+    const query = event.target.value.trim().toLowerCase();
+    let visible = 0;
+    document.querySelectorAll('.flag-card').forEach(card => {
+      const show = !query || card.dataset.search.includes(query);
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    const empty = document.querySelector('.flag-empty');
+    if (empty) empty.hidden = visible !== 0;
   });
 
   settingsDialog.addEventListener('click',event => {
