@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111b55">
+  <title>DopaTouch 制作ガイド</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f8fbff;--muted:#b9c6e2;--panel:#17245e;--cyan:#24d8ed;--yellow:#ffe436;--pink:#ff5fa1;--green:#62e980}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Hiragino Maru Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 20% 8%,#4432a8 0,transparent 28%),radial-gradient(circle at 85% 18%,#1264aa 0,transparent 25%),#07113b;line-height:1.7}
+    a{color:#8eeeff}
+    header{padding:52px 6vw 36px;text-align:center;background:linear-gradient(180deg,rgba(0,0,0,.2),transparent)}
+    h1{margin:0;font-size:clamp(32px,6vw,68px);letter-spacing:.03em;text-shadow:0 5px 0 #362070}
+    header p{max-width:760px;margin:10px auto 0;color:#d8e3ff;font-weight:700}
+    main{width:min(1040px,92vw);margin:auto;padding-bottom:80px}
+    section{margin:24px 0;padding:24px;border:2px solid rgba(120,220,255,.28);border-radius:22px;background:rgba(18,31,86,.88);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+    h2{margin:0 0 14px;color:var(--yellow);font-size:clamp(23px,3vw,36px)}
+    h3{margin:20px 0 6px;color:#aef4ff}
+    p{margin:8px 0}
+    ol,ul{margin:8px 0;padding-left:1.5em}
+    li{margin:7px 0}
+    .status{display:inline-block;padding:4px 10px;border-radius:99px;color:#082144;background:var(--green);font-size:13px;font-weight:1000}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .card{padding:17px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(255,255,255,.07)}
+    .card strong{display:block;color:#fff3a0;font-size:18px}
+    .priority{display:grid;grid-template-columns:auto 1fr;gap:9px 14px;align-items:start}
+    .num{display:grid;place-items:center;width:34px;aspect-ratio:1;border-radius:50%;color:#15214a;background:var(--cyan);font-weight:1000}
+    .warn{border-color:#ff97bb;background:rgba(104,24,68,.62)}
+    .source-list{font-size:14px;color:var(--muted)}
+    .back{display:inline-block;margin-top:18px;padding:10px 18px;border-radius:12px;color:#102356;background:var(--cyan);font-weight:1000;text-decoration:none}
+    @media(max-width:600px){header{padding:34px 5vw 22px}section{padding:18px}.priority{grid-template-columns:1fr}.num{width:30px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DopaTouch 制作ガイド</h1>
+    <p>撮影する動画、学習として効く面白い機能、YouTube・Instagram、アカウント制度を、実装する順番までまとめた制作者用ページです。</p>
+  </header>
+  <main>
+    <section>
+      <h2>まず進める順番</h2>
+      <div class="priority">
+        <span class="num">1</span><div><strong>撮影ボードを安定させる</strong><br><span class="status">今回対応</span> 強制フルスクリーンをやめ、iPadの警告対策と画面消灯防止を入れる。</div>
+        <span class="num">2</span><div><strong>A1の最初の説明動画を撮る</strong><br>1〜4の置き方と消し方を、短い素材でも残す。</div>
+        <span class="num">3</span><div><strong>動画 → まねっこ → たまおきの1本を完成させる</strong><br>まずA1の1面だけを最後まで遊べる状態にする。</div>
+        <span class="num">4</span><div><strong>正答・ミス・所要時間を保存する</strong><br>問題数を増やす前に、学習結果の形を固める。</div>
+        <span class="num">5</span><div><strong>保護者アカウントを作る</strong><br>子どもはニックネームだけ、メール・支払い・外部リンクは保護者側に置く。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>撮った方がいい動画</h2>
+      <div class="grid">
+        <div class="card"><strong>A1-01　1〜4</strong>1珠の置き方、4珠がまとめて光ること、4から一番上を押すと全部消えること。</div>
+        <div class="card"><strong>A1-02　5の珠</strong>赤い5珠をON・OFFする。1珠との違いを見せる。</div>
+        <div class="card"><strong>A1-03　6〜9</strong>5珠と1〜4珠を組み合わせる。8なら5と3番目の2か所だけを押す。</div>
+        <div class="card"><strong>A1-04　同時タッチ</strong>2本・3本・4本を同時に置く場面。指が珠を隠しすぎない角度でも撮る。</div>
+        <div class="card"><strong>A1-05　2桁</strong>左右の桁が独立していること、両手で別の桁を同時に触れること。</div>
+        <div class="card"><strong>保護者向け</strong>始め方、毎日3面の考え方、正しい指づかい、困ったとき、進捗の見方。</div>
+      </div>
+      <h3>撮影ルール</h3>
+      <ul>
+        <li>横向き・通知OFF・手と画面だけ。名前、通知、写真など個人情報は映さない。</li>
+        <li>各操作の前後を2秒ずつ残し、5〜10秒の短い素材も別撮りする。</li>
+        <li>音声はあとから入れられるよう、無言版も残す。BGM・効果音は自作か利用許可のあるものだけ。</li>
+        <li>説明は「ここを押して」だけでなく、「3になった」「上の3つが消えた」のように結果も言う。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>入れると面白い機能</h2>
+      <div class="grid">
+        <div class="card"><strong>できたことを言う</strong>「3本指でできた！」「2桁同時！」など、報酬と一緒に上達内容を表示する。</div>
+        <div class="card"><strong>ごほうびを選べる</strong>面クリア後に3つから演出を選ぶ。自分で選べること自体が楽しさになる。</div>
+        <div class="card"><strong>たまに特別ダンス</strong>毎問ではなく、アイコンクリア時や自己ベスト時に横揺れ・変身・紙吹雪を出す。</div>
+        <div class="card"><strong>今日の3面</strong>1/3、2/3、3/3を大きく見せる。できない日は責めず、翌日に普通に再開できる。</div>
+        <div class="card"><strong>ボス面</strong>A12など節目だけ、今までの操作を組み合わせた短い特別面にする。</div>
+        <div class="card"><strong>おだやかモード</strong>端末の「視差効果を減らす」に合わせて揺れを止め、光・色・音中心の演出に切り替える。</div>
+        <div class="card"><strong>復習を自動で混ぜる</strong>新しい問題だけでなく、少し前の問題を間隔を空けて再登場させる。</div>
+        <div class="card"><strong>成長アルバム</strong>課金ガチャではなく、学習で必ず増えるキャラ・国旗・写真風カードを集める。</div>
+      </div>
+      <p>優先は「正しい操作が分かる → すぐ反応 → 小さな達成 → 次へ」です。派手な報酬だけで学習を引っ張らない方が、長く続けやすい設計になります。</p>
+    </section>
+
+    <section>
+      <h2>公式YouTube・Instagram案</h2>
+      <h3>YouTube</h3>
+      <ul>
+        <li><strong>子ども向け：</strong>20〜60秒の「今日のタッチ」、操作動画、歌、キャラクターダンス。</li>
+        <li><strong>保護者向け：</strong>2〜5分の始め方、学習データの見方、指づかい、A1で身につくこと、よくある質問。</li>
+        <li>子ども向け動画は「Made for Kids」の設定が必要。コメント、通知ベル、カード・終了画面などが使えないため、それらを前提にした導線は作らない。</li>
+        <li>DopaTouch名のブランドチャンネルにして、将来は複数の大人が安全に管理できる形にする。</li>
+      </ul>
+      <h3>Instagram</h3>
+      <ul>
+        <li>基本は<strong>保護者・先生向け</strong>。15〜30秒の操作例、開発の裏側、今週の新機能、家庭での声かけを投稿する。</li>
+        <li>子どもの顔・本名・学校・位置・学習画面の個人情報は出さない。投稿素材は大人の手か、許可を得たモデルだけにする。</li>
+        <li>アプリ内からSNSへ直接飛ばす場合は、必ず保護者メニューの中に置く。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>アカウントと使用料</h2>
+      <ol>
+        <li><strong>今：</strong>端末内保存でA1を完成させる。集めるデータ項目を決める。</li>
+        <li><strong>次：</strong>保護者のメールでログインし、子どもはニックネームのプロフィールにする。正答、ミス、時間、現在面だけを保存する。</li>
+        <li><strong>その後：</strong>保護者画面に契約・支払い・解約・データ削除を置く。子ども画面に購入ボタンや外部リンクを置かない。</li>
+      </ol>
+      <p>正確な誕生日、住所、学校名、位置情報、子どものメールは、学習に本当に必要になるまで集めないのが安全です。公開前にプライバシーポリシー、保護者同意、データ削除方法を用意します。</p>
+    </section>
+
+    <section class="warn">
+      <h2>大事：DopaTouchをオリジナル作品にする</h2>
+      <p>仕組みを研究することと、他社の画面・ロゴ・キャラクター・音・動画・文章・問題セットをコピーして公開することは別です。今後公開・有料化する前に、DopaTouch専用のロゴ、キャラクター、背景、アイコン、効果音、説明動画、問題データへ置き換えます。そろタッチのスクリーンショットや録画をDopaTouchの教材素材として再配布しません。</p>
+    </section>
+
+    <section>
+      <h2>調査に使った主な資料</h2>
+      <ul class="source-list">
+        <li><a href="https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html">Apple：ホーム画面Webアプリの設定</a></li>
+        <li><a href="https://developer.chrome.com/docs/capabilities/web-apis/wake-lock">Chrome Developers：Screen Wake Lock</a></li>
+        <li><a href="https://ies.ed.gov/ncee/wwc/PracticeGuide/1">米国IES：学習を間隔化し、想起練習を使う実践ガイド</a></li>
+        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html">W3C：操作で起きるアニメーションと動きを減らす設定</a></li>
+        <li><a href="https://support.google.com/youtube/answer/9632097?hl=ja">YouTube：Made for Kidsで制限される機能</a></li>
+        <li><a href="https://support.google.com/youtube/answer/4642409?hl=ja">YouTube：ブランドアカウントでのチャンネル管理</a></li>
+        <li><a href="https://developer.apple.com/app-store/review/guidelines/">Apple：子ども向けアプリ、保護者ゲート、プライバシー</a></li>
+        <li><a href="https://support.google.com/googleplay/android-developer/answer/17190352?hl=ja">Google Play：Familiesポリシー</a></li>
+        <li><a href="https://www.ftc.gov/system/files/ftc_gov/pdf/coppa_sbp_1.16_0.pdf">米国FTC：COPPAと保護者同意</a></li>
+        <li><a href="https://www.sorotouch.jp/nyumonhen/">そろタッチ公式：入門・指づかい・毎日3面に関する公開説明</a></li>
+      </ul>
+      <a class="back" href="video-board.html">撮影ボードへ戻る</a>
+    </section>
+  </main>
+</body>
+</html>

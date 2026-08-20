@@ -549,8 +549,6 @@
     if (action === 'parent') { openParent(); return; }
     if (action === 'start') {
       sound('reward'); vibrate(35);
-      try { if (document.documentElement.requestFullscreen && !document.fullscreenElement) await document.documentElement.requestFullscreen({navigationUI:'hide'}); } catch (_) {}
-      try { await screen.orientation?.lock?.('landscape'); } catch (_) {}
       showLoading(renderMissionSelect,1000); return;
     }
     if (action === 'start-back') { renderStart(); return; }

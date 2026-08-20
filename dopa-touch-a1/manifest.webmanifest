@@ -1,10 +1,11 @@
 {
-  "name": "DopaTouch A1 ミッション",
+  "name": "DopaTouch",
   "short_name": "DopaTouch",
   "description": "固定珠タッチで学ぶ、音とごほうびがいっぱいのA1学習ミッション",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "landscape",
   "background_color": "#07134d",
   "theme_color": "#07134d",

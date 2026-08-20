@@ -4,11 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="DopaTouch Board">
   <title>DopaTouch 共通動画撮影用ボード</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <style>
     :root{--columns:2;--column-width:17vw;--board-extra:4vw;--board-max:94vw;--board-height:82vh;--active1:#ffe51f;--active2:#ffb400;--back:#000;--panel:#000;--dark:#292929;--line:#333}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{width:100%;height:100%;margin:0;overflow:hidden;touch-action:none}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;touch-action:none;-webkit-touch-callout:none}
     body{font-family:"Hiragino Maru Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;background:#020617;color:white;user-select:none;-webkit-user-select:none}
     button{font:inherit}
     .stage{position:fixed;inset:0;display:grid;place-items:center;background:var(--back);overflow:hidden;isolation:isolate}
@@ -44,6 +50,13 @@
     .check{display:flex;align-items:center;gap:10px;margin:1.4vh 0;font-weight:900}.check input{width:24px;height:24px;accent-color:#16bdd9}
     .start{width:100%;margin-top:2vh;padding:14px;border:3px solid #0879c9;border-radius:14px;color:#08204f;background:linear-gradient(#30dced,#13bedf);box-shadow:0 6px 0 #07579e;font-size:clamp(22px,3vw,38px);font-weight:1000;cursor:pointer}
     .small{margin-top:1.6vh;color:#687a8f;font-size:13px;line-height:1.6}
+    .ipad-tip{margin:1.6vh 0;padding:12px 14px;border:2px solid #88cdf5;border-radius:13px;color:#21466d;background:#e9f7ff;font-size:14px;font-weight:800;line-height:1.65}
+    .ipad-tip strong{color:#075b9c}
+    details{margin-top:1.6vh;border:2px solid #b6d8ed;border-radius:14px;background:#f3faff;overflow:hidden}
+    summary{padding:12px 14px;color:#12385d;font-weight:1000;cursor:pointer}
+    .shoot-list{margin:0;padding:4px 24px 16px 42px;color:#425d76;font-size:14px;font-weight:750;line-height:1.75}
+    .shoot-list strong{color:#152f50}
+    .guide-link{display:block;margin-top:14px;padding:11px 14px;border:2px solid #8f79e8;border-radius:12px;color:#352070;background:#f1edff;text-align:center;font-weight:1000;text-decoration:none}
     .countdown{position:fixed;inset:0;z-index:60;display:grid;place-items:center;color:#fff72f;background:#000;font:1000 min(24vw,250px)/1 Arial Black,sans-serif;text-shadow:0 0 3vw #ff6b00;animation:pop .6s ease-out}
     .countdown[hidden]{display:none}
     @keyframes pop{from{transform:scale(.3);opacity:0}70%{transform:scale(1.18)}to{transform:scale(1);opacity:1}}
@@ -66,8 +79,23 @@
       <div class="option"><strong>背景</strong><div class="choices" data-group="background"><button class="choice selected" data-value="black">黒</button><button class="choice" data-value="blue">水色</button><button class="choice" data-value="space">宇宙</button></div></div>
       <div class="option"><strong>光る珠の色</strong><div class="choices" data-group="color"><button class="choice selected" data-value="yellow">黄色</button><button class="choice" data-value="blue">水色</button></div></div>
       <label class="check"><input type="checkbox" id="showValues">上に現在の数字を表示する</label>
+      <div class="ipad-tip"><strong>iPadで警告を出さない方法：</strong>このページを「共有 → ホーム画面に追加」して、追加したDopaTouchから開いてください。撮影開始時に危険判定される強制フルスクリーンは使いません。</div>
+      <details>
+        <summary>明日撮る「A1・1〜4」の撮影リスト</summary>
+        <ol class="shoot-list">
+          <li><strong>0の状態</strong>を1秒映す</li>
+          <li>下の1番目を押して<strong>1</strong></li>
+          <li>下の2番目を押して<strong>2</strong></li>
+          <li>下の3番目を押して<strong>3</strong></li>
+          <li>下の4番目を押して<strong>4（4珠すべて点灯）</strong></li>
+          <li>4の状態で一番上を押し、<strong>4珠すべて消える</strong>ところを撮る</li>
+          <li>4の状態で上から2番目を押し、<strong>上側3珠が消えて1が残る</strong>ところを撮る</li>
+          <li>各操作は5〜10秒の短い素材でも撮る（あとで編集しやすい）</li>
+        </ol>
+      </details>
+      <a class="guide-link" href="production-guide.html" target="_blank" rel="noopener">動画案・面白い機能・公式SNSの制作ガイドを見る</a>
       <button class="start" id="startRecording">撮影開始</button>
-      <p class="small">撮影中：左上を1秒長押しすると、この設定画面へ戻ります。パソコンではRキーで珠をリセットできます。</p>
+      <p class="small">撮影中：左上を1秒長押しすると、この設定画面へ戻ります。パソコンではRキーで珠をリセットできます。撮影中は対応端末で画面の自動消灯を防ぎます。</p>
     </div>
   </section>
   <div class="countdown" id="countdown" hidden>3</div>
@@ -77,7 +105,7 @@
       'use strict';
       const board=document.getElementById('board'),stage=document.getElementById('stage'),setup=document.getElementById('setup'),values=document.getElementById('values'),countdown=document.getElementById('countdown');
       const pointers=new Map();
-      let audio=null,recording=false,cornerTimer=null;
+      let audio=null,recording=false,cornerTimer=null,wakeLock=null;
       const settings={background:'black',color:'yellow',digits:2,size:'medium'};
       function beadHTML(column,value,index){return `<button class="bead" data-column="${column}" data-value="${value}" data-index="${index}" aria-pressed="false" aria-label="${value===5?'5の珠':`${index+1}番目の1珠`}"></button>`}
       function renderBoard(digits){const count=Math.max(1,Math.min(5,Number(digits)||2));pointers.clear();board.innerHTML='';values.innerHTML='';document.documentElement.style.setProperty('--columns',String(count));for(let column=0;column<count;column++){board.insertAdjacentHTML('beforeend',`<section class="column${column===count-1?' units':''}" data-column="${column}"><div class="upper">${beadHTML(column,5,0)}</div><div class="lower">${[0,1,2,3].map(index=>beadHTML(column,1,index)).join('')}</div></section>`);values.insertAdjacentHTML('beforeend','<span>0</span>')}update()}
@@ -86,16 +114,20 @@
       function reset(){board.querySelectorAll('.bead').forEach(bead=>{setBead(bead,false);bead.classList.remove('pressed')});pointers.clear();update();tap(360)}
       function toggle(bead){if(Number(bead.dataset.value)===5)setBead(bead,!bead.classList.contains('on'));else{const column=bead.closest('.column'),lower=[...column.querySelectorAll('.bead[data-value="1"]')],index=Number(bead.dataset.index),count=lower.filter(item=>item.classList.contains('on')).length,next=index<count?index:index+1;lower.forEach((item,itemIndex)=>setBead(item,itemIndex<next))}update();tap(650)}
       function tap(frequency){try{const AudioEngine=window.AudioContext||window.webkitAudioContext;audio=audio||new AudioEngine();const oscillator=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.18,now);gain.gain.exponentialRampToValueAtTime(.001,now+.07);oscillator.connect(gain).connect(audio.destination);oscillator.start(now);oscillator.stop(now+.08)}catch(_){}}
+      async function keepScreenAwake(){if(!('wakeLock' in navigator)||wakeLock)return;try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null},{once:true})}catch(_){wakeLock=null}}
+      async function releaseScreenAwake(){if(!wakeLock)return;const lock=wakeLock;wakeLock=null;try{await lock.release()}catch(_){}}
       board.addEventListener('pointerdown',event=>{const bead=event.target.closest('.bead');if(!bead||pointers.has(event.pointerId))return;event.preventDefault();pointers.set(event.pointerId,{bead,x:event.clientX,y:event.clientY,moved:false});bead.classList.add('pressed');try{bead.setPointerCapture(event.pointerId)}catch(_){}});
       board.addEventListener('pointermove',event=>{const point=pointers.get(event.pointerId);if(!point)return;if(Math.hypot(event.clientX-point.x,event.clientY-point.y)>14){point.moved=true;point.bead.classList.remove('pressed')}});
       function finish(event,cancelled=false){const point=pointers.get(event.pointerId);if(!point)return;point.bead.classList.remove('pressed');if(!cancelled&&!point.moved){toggle(point.bead);if(navigator.vibrate)navigator.vibrate(15)}pointers.delete(event.pointerId)}
       board.addEventListener('pointerup',finish);board.addEventListener('pointercancel',event=>finish(event,true));
       document.querySelectorAll('.choices').forEach(group=>group.addEventListener('click',event=>{const button=event.target.closest('.choice');if(!button)return;group.querySelectorAll('.choice').forEach(item=>item.classList.remove('selected'));button.classList.add('selected');settings[group.dataset.group]=button.dataset.value}));
       function applySettings(){renderBoard(settings.digits);stage.className=`stage ${settings.background==='black'?'':settings.background}`;stage.dataset.size=settings.size;if(settings.color==='blue'){document.documentElement.style.setProperty('--active1','#bffaff');document.documentElement.style.setProperty('--active2','#079ee5')}else{document.documentElement.style.setProperty('--active1','#ffe51f');document.documentElement.style.setProperty('--active2','#ffb400')}values.hidden=!document.getElementById('showValues').checked}
-      document.getElementById('startRecording').addEventListener('click',async()=>{applySettings();reset();try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen({navigationUI:'hide'})}catch(_){}try{await screen.orientation?.lock?.('landscape')}catch(_){}setup.hidden=true;countdown.hidden=false;let number=3;countdown.textContent=number;const timer=setInterval(()=>{number--;if(number<=0){clearInterval(timer);countdown.hidden=true;recording=true;return}countdown.textContent=number},650)});
-      const corner=document.getElementById('hotCorner');corner.addEventListener('pointerdown',()=>{if(!recording)return;cornerTimer=setTimeout(()=>{recording=false;setup.hidden=false;reset()},1000)});['pointerup','pointercancel','pointerleave'].forEach(type=>corner.addEventListener(type,()=>clearTimeout(cornerTimer)));
-      window.addEventListener('keydown',event=>{if(event.key.toLowerCase()==='r')reset();if(event.key==='Escape'){recording=false;setup.hidden=false}});
+      document.getElementById('startRecording').addEventListener('click',async()=>{applySettings();reset();await keepScreenAwake();setup.hidden=true;countdown.hidden=false;let number=3;countdown.textContent=number;const timer=setInterval(()=>{number--;if(number<=0){clearInterval(timer);countdown.hidden=true;recording=true;return}countdown.textContent=number},650)});
+      async function returnToSetup(){recording=false;setup.hidden=false;reset();await releaseScreenAwake()}
+      const corner=document.getElementById('hotCorner');corner.addEventListener('pointerdown',()=>{if(!recording)return;cornerTimer=setTimeout(returnToSetup,1000)});['pointerup','pointercancel','pointerleave'].forEach(type=>corner.addEventListener(type,()=>clearTimeout(cornerTimer)));
+      window.addEventListener('keydown',event=>{if(event.key.toLowerCase()==='r')reset();if(event.key==='Escape')returnToSetup()});
       window.addEventListener('blur',()=>{board.querySelectorAll('.pressed').forEach(bead=>bead.classList.remove('pressed'));pointers.clear()});
+      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&recording)keepScreenAwake()});
       document.addEventListener('gesturestart',event=>event.preventDefault(),{passive:false});document.addEventListener('touchmove',event=>{if(event.touches.length>1)event.preventDefault()},{passive:false});
       renderBoard(settings.digits);
     })();
