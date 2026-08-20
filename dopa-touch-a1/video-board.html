@@ -24,6 +24,7 @@
     .bead{position:relative;z-index:4;width:94%;min-height:12.5vh;border:2px solid #111;border-radius:50%;padding:0;background:var(--dark);box-shadow:inset 0 .6vh .6vh rgba(255,255,255,.05),inset 0 -.7vh .8vh rgba(0,0,0,.28),0 .35vh .4vh rgba(0,0,0,.55);cursor:pointer;touch-action:none;transition:transform .06s,filter .06s,background .1s,box-shadow .1s}
     .bead:after{content:"";position:absolute;left:18%;right:18%;top:10%;height:18%;border-radius:50%;background:rgba(255,255,255,.08)}
     .bead.on{background:linear-gradient(var(--active1),var(--active2));box-shadow:inset 0 .7vh .65vh rgba(255,255,255,.65),inset 0 -.9vh .9vh rgba(255,90,0,.18),0 0 1.4vw color-mix(in srgb,var(--active1) 72%,transparent)}
+    .bead[data-value="5"].on{background:linear-gradient(#ff5656,#c90000);box-shadow:inset 0 .7vh .65vh rgba(255,255,255,.68),inset 0 -.9vh .9vh rgba(90,0,0,.35),0 0 1.5vw rgba(255,30,30,.9)}
     .bead.pressed{transform:scale(.9);filter:brightness(1.24)}
     .values{position:absolute;z-index:10;top:3vh;left:50%;transform:translateX(-50%);display:flex;gap:6vw;font-size:min(7vw,82px);font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 .4vh .4vh rgba(0,0,0,.45)}
     .values[hidden]{display:none}
