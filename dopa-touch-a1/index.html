@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#07134d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DopaTouch">
+  <title>DopaTouch A1</title>
+  <meta name="description" content="固定珠タッチで学ぶ、音とごほうびがいっぱいのA1学習ミッション">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body data-device="pc">
+  <div id="deviceShell" class="device-shell">
+    <main id="app" aria-live="polite"></main>
+
+    <div id="loading" class="loading-layer" hidden aria-label="読み込み中">
+      <div class="loading-stars" aria-hidden="true"></div>
+      <div class="loading-mascot" aria-hidden="true"><span>★</span></div>
+      <p>よみこみ中<span class="loading-dots">・・・</span></p>
+    </div>
+
+    <div id="rewardOverlay" class="reward-overlay" hidden aria-live="assertive">
+      <div class="reward-rays" aria-hidden="true"></div>
+      <div class="reward-card">
+        <div id="rewardIcon" class="reward-icon">🎁</div>
+        <p id="rewardKicker" class="reward-kicker">アイコンクリア！</p>
+        <h2 id="rewardTitle">プレゼント！</h2>
+        <p id="rewardMessage">よくできました！</p>
+      </div>
+    </div>
+
+    <div id="effects" class="effects" aria-hidden="true"></div>
+    <div id="toast" class="toast" role="status" hidden></div>
+
+    <dialog id="settingsDialog" class="dialog">
+      <form method="dialog" class="dialog-card">
+        <div class="dialog-head"><h2>せってい</h2><button class="round-close" value="cancel" aria-label="閉じる">×</button></div>
+        <label class="field"><span>ユーザーネーム</span><input id="nameInput" maxlength="12" autocomplete="off"></label>
+        <label class="field"><span>音の大きさ</span><input id="volumeInput" type="range" min="0" max="100" step="5"></label>
+        <label class="check-row"><input id="vibrationInput" type="checkbox"><span>振動を使う</span></label>
+        <label class="check-row"><input id="motionInput" type="checkbox"><span>派手なアニメーションを使う</span></label>
+        <div class="field"><span>画面の形</span><div class="device-options compact" id="settingsDevices"></div></div>
+        <button id="installButton" class="soft-button" type="button" hidden>ホーム画面に追加</button>
+        <button id="resetProgress" class="danger-button" type="button">A1の進み具合を最初に戻す</button>
+        <button id="saveSettings" class="primary-button" value="default">保存する</button>
+      </form>
+    </dialog>
+
+    <dialog id="parentDialog" class="dialog">
+      <form method="dialog" class="dialog-card parent-card">
+        <div class="dialog-head"><h2>保護者メニュー</h2><button class="round-close" value="cancel" aria-label="閉じる">×</button></div>
+        <div id="parentStats" class="parent-stats"></div>
+        <p class="small-note">この試作版では、進み具合はこの端末の中だけに保存されます。</p>
+        <button class="primary-button" value="default">閉じる</button>
+      </form>
+    </dialog>
+
+    <div class="rotate-tip" aria-hidden="true"><div>↻</div><strong>よこ向きにしてね</strong></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>DopaTouch A1 動画撮影用ボード</title>
+  <style>
+    :root{--active1:#ffe51f;--active2:#ffb400;--back:#000;--panel:#000;--dark:#292929;--line:#333}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;touch-action:none}
+    body{font-family:"Hiragino Maru Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;background:#020617;color:white;user-select:none;-webkit-user-select:none}
+    button{font:inherit}
+    .stage{position:fixed;inset:0;display:grid;place-items:center;background:var(--back);overflow:hidden;isolation:isolate}
+    .stage.space{background:radial-gradient(circle at 12% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 73% 12%,#9bdfff 0 1px,transparent 2px),radial-gradient(circle at 40% 77%,#fff 0 1px,transparent 2px),radial-gradient(ellipse at 50% 44%,#182b63,#080e28 62%,#02030c);background-size:77px 83px,103px 91px,121px 107px,auto}
+    .stage.blue{background:#67aef1}
+    .recording-board{position:relative;width:min(38vw,580px);height:min(82vh,920px);display:grid;grid-template-columns:repeat(2,1fr);gap:min(1.2vw,18px);padding:min(1vw,16px);background:var(--panel);border-radius:min(1.3vw,20px);box-shadow:0 2vh 5vw rgba(0,0,0,.34)}
+    .recording-board:before{content:"";position:absolute;z-index:5;left:3%;right:3%;top:25.5%;height:min(1.5vh,15px);background:var(--line);box-shadow:0 .25vh .4vh rgba(0,0,0,.5)}
+    .column{position:relative;display:grid;grid-template-rows:1fr 4fr;gap:1vh}
+    .column:before{content:"";position:absolute;left:50%;top:2%;bottom:1%;width:max(3px,.22vw);background:#3a3a3a;transform:translateX(-50%)}
+    .column.units:after{content:"";position:absolute;z-index:8;left:50%;top:25.25%;width:min(1.1vw,14px);aspect-ratio:1;border-radius:50%;background:#ff1212;transform:translate(-50%,-50%);box-shadow:0 0 .6vw #ff3a3a}
+    .upper,.lower{display:flex;align-items:center;justify-content:center}
+    .lower{flex-direction:column;justify-content:space-around}
+    .bead{position:relative;z-index:4;width:94%;min-height:12.5vh;border:2px solid #111;border-radius:50%;padding:0;background:var(--dark);box-shadow:inset 0 .6vh .6vh rgba(255,255,255,.05),inset 0 -.7vh .8vh rgba(0,0,0,.28),0 .35vh .4vh rgba(0,0,0,.55);cursor:pointer;touch-action:none;transition:transform .06s,filter .06s,background .1s,box-shadow .1s}
+    .bead:after{content:"";position:absolute;left:18%;right:18%;top:10%;height:18%;border-radius:50%;background:rgba(255,255,255,.08)}
+    .bead.on{background:linear-gradient(var(--active1),var(--active2));box-shadow:inset 0 .7vh .65vh rgba(255,255,255,.65),inset 0 -.9vh .9vh rgba(255,90,0,.18),0 0 1.4vw color-mix(in srgb,var(--active1) 72%,transparent)}
+    .bead.pressed{transform:scale(.9);filter:brightness(1.24)}
+    .values{position:absolute;z-index:10;top:3vh;left:50%;transform:translateX(-50%);display:flex;gap:6vw;font-size:min(7vw,82px);font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 .4vh .4vh rgba(0,0,0,.45)}
+    .values[hidden]{display:none}
+    .hot-corner{position:absolute;z-index:20;left:0;top:0;width:7vw;height:12vh;opacity:0}
+    .hint{position:absolute;z-index:12;left:50%;bottom:1.3vh;transform:translateX(-50%);font-size:min(1.3vw,18px);font-weight:900;opacity:.3;pointer-events:none}
+    .setup{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:3vh 3vw;background:rgba(1,7,31,.9);backdrop-filter:blur(12px)}
+    .setup[hidden]{display:none}
+    .card{width:min(720px,88vw);max-height:92vh;overflow:auto;padding:3vh 3vw;border:4px solid #38dcf2;border-radius:24px;color:#15213e;background:#f7fcff;box-shadow:0 3vh 8vw rgba(0,0,0,.55)}
+    h1{margin:0 0 1vh;font-size:clamp(24px,3.2vw,44px)}
+    .lead{margin:0 0 2.2vh;color:#53657c;line-height:1.65;font-weight:700}
+    .option{margin:1.6vh 0}.option strong{display:block;margin-bottom:.7vh}
+    .choices{display:flex;flex-wrap:wrap;gap:10px}
+    .choice{min-width:100px;padding:10px 17px;border:2px solid #91b9de;border-radius:12px;color:#163153;background:#eaf7ff;font-weight:900;cursor:pointer}
+    .choice.selected{border-color:#ff9f00;background:#fff047;box-shadow:0 4px 0 #c96e00;transform:translateY(-2px)}
+    .check{display:flex;align-items:center;gap:10px;margin:1.4vh 0;font-weight:900}.check input{width:24px;height:24px;accent-color:#16bdd9}
+    .start{width:100%;margin-top:2vh;padding:14px;border:3px solid #0879c9;border-radius:14px;color:#08204f;background:linear-gradient(#30dced,#13bedf);box-shadow:0 6px 0 #07579e;font-size:clamp(22px,3vw,38px);font-weight:1000;cursor:pointer}
+    .small{margin-top:1.6vh;color:#687a8f;font-size:13px;line-height:1.6}
+    .countdown{position:fixed;inset:0;z-index:60;display:grid;place-items:center;color:#fff72f;background:#000;font:1000 min(24vw,250px)/1 Arial Black,sans-serif;text-shadow:0 0 3vw #ff6b00;animation:pop .6s ease-out}
+    .countdown[hidden]{display:none}
+    @keyframes pop{from{transform:scale(.3);opacity:0}70%{transform:scale(1.18)}to{transform:scale(1);opacity:1}}
+    @media (orientation:portrait){.recording-board{width:min(74vw,580px);height:min(72vh,920px)}.bead{min-height:9.5vh}.stage:after{content:"横向きにすると撮影しやすいよ";position:absolute;top:2vh;left:50%;transform:translateX(-50%);font-weight:900;opacity:.6}}
+  </style>
+</head>
+<body>
+  <main class="stage" id="stage">
+    <div class="values" id="values" hidden><span>0</span><span>0</span></div>
+    <div class="recording-board" id="board" aria-label="動画撮影用の固定珠ボード"></div>
+    <button class="hot-corner" id="hotCorner" aria-label="長押しで撮影設定"></button>
+    <div class="hint" id="hint">2本指タッチでリセット</div>
+  </main>
+
+  <section class="setup" id="setup">
+    <div class="card">
+      <h1>A1 動画撮影用ボード</h1>
+      <p class="lead">設定後に「撮影開始」を押すと、画面にはボードだけが残ります。実際の指で珠をタッチして撮影してください。</p>
+      <div class="option"><strong>背景</strong><div class="choices" data-group="background"><button class="choice selected" data-value="black">黒</button><button class="choice" data-value="blue">水色</button><button class="choice" data-value="space">宇宙</button></div></div>
+      <div class="option"><strong>光る珠の色</strong><div class="choices" data-group="color"><button class="choice selected" data-value="yellow">黄色</button><button class="choice" data-value="blue">水色</button></div></div>
+      <label class="check"><input type="checkbox" id="showValues">上に現在の数字を表示する</label>
+      <label class="check"><input type="checkbox" id="soundEnabled">タッチ音を出す</label>
+      <button class="start" id="startRecording">撮影開始</button>
+      <p class="small">撮影中：2本指で同時に画面を触ると珠を全部リセットできます。左上を1秒長押しすると、この設定画面へ戻ります。パソコンではRキーでもリセットできます。</p>
+    </div>
+  </section>
+  <div class="countdown" id="countdown" hidden>3</div>
+
+  <script>
+    (()=>{
+      'use strict';
+      const board=document.getElementById('board'),stage=document.getElementById('stage'),setup=document.getElementById('setup'),values=document.getElementById('values'),countdown=document.getElementById('countdown');
+      const pointers=new Map();
+      let audio=null,recording=false,cornerTimer=null;
+      const settings={background:'black',color:'yellow'};
+      function beadHTML(column,value,index){return `<button class="bead" data-column="${column}" data-value="${value}" data-index="${index}" aria-pressed="false" aria-label="${value===5?'5の珠':`${index+1}番目の1珠`}"></button>`}
+      for(let column=0;column<2;column++) board.insertAdjacentHTML('beforeend',`<section class="column${column===1?' units':''}" data-column="${column}"><div class="upper">${beadHTML(column,5,0)}</div><div class="lower">${[0,1,2,3].map(index=>beadHTML(column,1,index)).join('')}</div></section>`);
+      function setBead(bead,on){bead.classList.toggle('on',on);bead.setAttribute('aria-pressed',String(on))}
+      function update(){const result=[...board.querySelectorAll('.column')].map(column=>[...column.querySelectorAll('.bead.on')].reduce((sum,bead)=>sum+Number(bead.dataset.value),0));[...values.children].forEach((output,index)=>output.textContent=String(result[index]))}
+      function reset(){board.querySelectorAll('.bead').forEach(bead=>{setBead(bead,false);bead.classList.remove('pressed')});pointers.clear();update();tap(360)}
+      function toggle(bead){if(Number(bead.dataset.value)===5)setBead(bead,!bead.classList.contains('on'));else{const column=bead.closest('.column'),lower=[...column.querySelectorAll('.bead[data-value="1"]')],index=Number(bead.dataset.index),count=lower.filter(item=>item.classList.contains('on')).length,next=index<count?index:index+1;lower.forEach((item,itemIndex)=>setBead(item,itemIndex<next))}update();tap(650)}
+      function tap(frequency){if(!document.getElementById('soundEnabled').checked)return;try{const AudioEngine=window.AudioContext||window.webkitAudioContext;audio=audio||new AudioEngine();const oscillator=audio.createOscillator(),gain=audio.createGain(),now=audio.currentTime;oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.18,now);gain.gain.exponentialRampToValueAtTime(.001,now+.07);oscillator.connect(gain).connect(audio.destination);oscillator.start(now);oscillator.stop(now+.08)}catch(_){}}
+      board.addEventListener('pointerdown',event=>{const bead=event.target.closest('.bead');if(!bead||pointers.has(event.pointerId))return;event.preventDefault();pointers.set(event.pointerId,{bead,x:event.clientX,y:event.clientY,moved:false});bead.classList.add('pressed');try{bead.setPointerCapture(event.pointerId)}catch(_){}if(pointers.size>=2){reset();if(navigator.vibrate)navigator.vibrate(25)}});
+      board.addEventListener('pointermove',event=>{const point=pointers.get(event.pointerId);if(!point)return;if(Math.hypot(event.clientX-point.x,event.clientY-point.y)>14){point.moved=true;point.bead.classList.remove('pressed')}});
+      function finish(event,cancelled=false){const point=pointers.get(event.pointerId);if(!point)return;point.bead.classList.remove('pressed');if(!cancelled&&!point.moved&&pointers.size<2){toggle(point.bead);if(navigator.vibrate)navigator.vibrate(15)}pointers.delete(event.pointerId)}
+      board.addEventListener('pointerup',finish);board.addEventListener('pointercancel',event=>finish(event,true));
+      document.querySelectorAll('.choices').forEach(group=>group.addEventListener('click',event=>{const button=event.target.closest('.choice');if(!button)return;group.querySelectorAll('.choice').forEach(item=>item.classList.remove('selected'));button.classList.add('selected');settings[group.dataset.group]=button.dataset.value}));
+      function applySettings(){stage.className=`stage ${settings.background==='black'?'':settings.background}`;if(settings.color==='blue'){document.documentElement.style.setProperty('--active1','#bffaff');document.documentElement.style.setProperty('--active2','#079ee5')}else{document.documentElement.style.setProperty('--active1','#ffe51f');document.documentElement.style.setProperty('--active2','#ffb400')}values.hidden=!document.getElementById('showValues').checked}
+      document.getElementById('startRecording').addEventListener('click',async()=>{applySettings();reset();try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen({navigationUI:'hide'})}catch(_){}try{await screen.orientation?.lock?.('landscape')}catch(_){}setup.hidden=true;countdown.hidden=false;let number=3;countdown.textContent=number;const timer=setInterval(()=>{number--;if(number<=0){clearInterval(timer);countdown.hidden=true;recording=true;return}countdown.textContent=number},650)});
+      const corner=document.getElementById('hotCorner');corner.addEventListener('pointerdown',()=>{if(!recording)return;cornerTimer=setTimeout(()=>{recording=false;setup.hidden=false;reset()},1000)});['pointerup','pointercancel','pointerleave'].forEach(type=>corner.addEventListener(type,()=>clearTimeout(cornerTimer)));
+      window.addEventListener('keydown',event=>{if(event.key.toLowerCase()==='r')reset();if(event.key==='Escape'){recording=false;setup.hidden=false}});
+      window.addEventListener('blur',()=>{board.querySelectorAll('.pressed').forEach(bead=>bead.classList.remove('pressed'));pointers.clear()});
+      document.addEventListener('gesturestart',event=>event.preventDefault(),{passive:false});document.addEventListener('touchmove',event=>{if(event.touches.length>1)event.preventDefault()},{passive:false});
+      update();
+    })();
+  </script>
+</body>
+</html>
