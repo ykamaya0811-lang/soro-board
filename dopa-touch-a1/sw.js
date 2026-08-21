@@ -1,6 +1,6 @@
-const CACHE = 'dopatouch-a1-v4';
+const CACHE = 'dopatouch-a1-v5';
 const FILES = [
-  './', './index.html', './app.css', './app.js', './manifest.webmanifest',
+  './', './index.html', './app.css?v=5', './app.js?v=5', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './assets/dopatouch-logo.png', './video-board.html', './production-guide.html'
 ];
 self.addEventListener('install', event => {

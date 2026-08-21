@@ -617,7 +617,7 @@
   window.addEventListener('blur',() => { activePointers.forEach(point => point.bead.classList.remove('pressed')); activePointers.clear(); });
   document.addEventListener('gesturestart',event => event.preventDefault(),{passive:false});
   document.addEventListener('touchmove',event => { if (event.touches.length > 1) event.preventDefault(); },{passive:false});
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js'));
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js?v=5'));
 
   renderStart();
 })();
