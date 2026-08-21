@@ -11,7 +11,7 @@
   <meta name="description" content="固定珠タッチで学ぶ、音とごほうびがいっぱいのA1学習ミッション">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="app.css?v=6">
+  <link rel="stylesheet" href="app.css?v=8">
 </head>
 <body data-device="pc">
   <div id="deviceShell" class="device-shell">
@@ -61,6 +61,24 @@
 
     <div class="rotate-tip" aria-hidden="true"><div>↻</div><strong>よこ向きにしてね</strong></div>
   </div>
-  <script src="app.js?v=6"></script>
+  <div id="authGate" class="auth-gate" aria-live="polite">
+    <section class="auth-card">
+      <img src="assets/dopatouch-logo.png" alt="DopaTouch" class="auth-logo">
+      <h1 id="authTitle">ログイン</h1>
+      <p id="authLead">メールアドレスとパスワードを入力してください</p>
+      <form id="authForm">
+        <label id="displayNameField" class="auth-field" hidden><span>ユーザーネーム</span><input id="authName" maxlength="12" autocomplete="nickname"></label>
+        <label class="auth-field"><span>メールアドレス</span><input id="authEmail" type="email" autocomplete="email" required></label>
+        <label class="auth-field"><span>パスワード（6文字以上）</span><input id="authPassword" type="password" minlength="6" autocomplete="current-password" required></label>
+        <p id="authMessage" class="auth-message"></p>
+        <button id="authSubmit" class="auth-submit" type="submit">ログイン</button>
+      </form>
+      <button id="authSwitch" class="auth-switch" type="button">はじめての方：アカウントを作る</button>
+    </section>
+  </div>
+  <button id="accountButton" class="account-button" type="button" hidden>ログアウト</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

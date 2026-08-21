@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DopaTouch 管理者</title>
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body>
+  <main class="admin-shell">
+    <header><div><p>DopaTouch</p><h1>管理者画面</h1></div><button id="logoutButton" class="sub-button" hidden>ログアウト</button></header>
+
+    <section id="loginPanel" class="panel login-panel">
+      <h2>管理者ログイン</h2>
+      <form id="loginForm">
+        <label>メールアドレス<input id="loginEmail" type="email" required></label>
+        <label>パスワード<input id="loginPassword" type="password" required></label>
+        <button class="main-button">ログイン</button>
+      </form>
+      <p id="loginMessage" class="message"></p>
+    </section>
+
+    <div id="adminArea" hidden>
+      <section class="summary-grid">
+        <article><strong id="totalUsers">0</strong><span>利用者</span></article>
+        <article><strong id="activeUsers">0</strong><span>利用中</span></article>
+        <article><strong id="stoppedUsers">0</strong><span>停止中</span></article>
+      </section>
+
+      <section class="panel">
+        <h2>新しい利用者を招待</h2>
+        <form id="inviteForm" class="invite-form">
+          <label>ユーザーネーム<input id="inviteName" maxlength="12" required></label>
+          <label>メールアドレス<input id="inviteEmail" type="email" required></label>
+          <label>利用期限（任意）<input id="inviteExpiry" type="date"></label>
+          <button class="main-button">招待メールを送る</button>
+        </form>
+        <p id="inviteMessage" class="message"></p>
+      </section>
+
+      <section class="panel">
+        <div class="list-head"><h2>利用者一覧</h2><button id="reloadButton" class="sub-button">更新</button></div>
+        <div class="table-wrap"><table><thead><tr><th>名前</th><th>メール</th><th>状態</th><th>期限</th><th>操作</th></tr></thead><tbody id="userRows"></tbody></table></div>
+        <p id="listMessage" class="message"></p>
+      </section>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>

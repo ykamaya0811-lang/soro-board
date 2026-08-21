@@ -1,0 +1,12 @@
+DopaTouch 管理者機能のセットアップ
+
+1. Supabase の SQL Editor を開く
+2. supabase/setup.sql の内容を貼って Run
+3. DopaTouch の通常画面で、あなた自身のアカウントを作る
+4. setup.sql 最後の update 文で、あなたのメールアドレスを管理者にする
+5. Supabase CLI から admin-users Edge Function を公開する
+6. 管理者画面: /dopa-touch-a1/admin.html
+
+重要:
+- service_role / Secret key を HTML・JavaScript・GitHubへ書かない
+- 招待された人は、届いたメールから利用を開始する
