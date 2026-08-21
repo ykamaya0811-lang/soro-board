@@ -44,6 +44,8 @@
     name: 'ゲスト',
     stage: 'A1',
     selectedFlag: 'jp',
+    flagOffer: [],
+    flagCollection: {},
     completed: [],
     mistakes: 0,
     totalCorrect: 0,
@@ -63,6 +65,8 @@
         merged.dailyClears = 0;
       }
       merged.completed = Array.isArray(merged.completed) ? merged.completed.filter(x => FLOW.includes(x)) : [];
+      merged.flagOffer = Array.isArray(merged.flagOffer) ? merged.flagOffer.filter(code => FLAGS.some(flag => flag.code === code)).slice(0, 3) : [];
+      merged.flagCollection = merged.flagCollection && typeof merged.flagCollection === 'object' ? merged.flagCollection : {};
       return merged;
     } catch (_) {
       return structuredClone(defaults);
@@ -208,6 +212,19 @@
   }
   function sideTabs() { return `<aside class="side-tabs" aria-hidden="true"><div class="side-tab">Timer</div><div class="side-tab">Volume</div></aside>`; }
   function escapeHTML(text) { return String(text).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+  function createFlagOffer() {
+    const pool = FLAGS.map(flag => flag.code);
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    state.flagOffer = pool.slice(0, 3);
+    save();
+  }
+  function currentFlagOffer() {
+    if (!Array.isArray(state.flagOffer) || state.flagOffer.length !== 3) createFlagOffer();
+    return state.flagOffer.map(code => FLAGS.find(flag => flag.code === code)).filter(Boolean);
+  }
 
   function renderStart() {
     setScreen(`<section class="screen start-screen star-bg">
@@ -221,10 +238,11 @@
   }
 
   function renderMissionSelect() {
+    const offeredFlags = currentFlagOffer();
     setScreen(`<section class="screen mission-select">
       ${gameHeader('きょうのミッション', 'start-back')}
       <div class="today-strip"><h1>きょうのミッション</h1><p>国旗をひとつ選ぼう！</p></div>
-      <div class="world-panel"><label class="flag-search"><span>🔎</span><input id="flagSearch" type="search" placeholder="国・地域を検索" autocomplete="off"></label><div class="flag-count">${FLAGS.length}の国・地域</div><div class="flag-grid">${FLAGS.map((item,index) => `<button class="flag-card" data-action="flag" data-index="${index}" data-search="${escapeHTML((item.name + ' ' + item.code).toLowerCase())}"><span class="flag">${flagGraphic(item.code, item.name)}</span><strong>${item.name}</strong><small>${item.code.toUpperCase()}</small></button>`).join('')}</div><p class="flag-empty" hidden>見つかりませんでした</p></div>
+      <div class="world-panel"><div class="random-label">🎲 ランダムでえらばれた3つ</div><div class="flag-grid">${offeredFlags.map(item => { const index = FLAGS.indexOf(item); return `<button class="flag-card" data-action="flag" data-index="${index}"><span class="flag">${flagGraphic(item.code, item.name)}</span><strong>${item.name}</strong><small>この国旗をえらぶ</small></button>`; }).join('')}</div></div>
       <div class="daily-progress"><span>きょう</span>${[0,1,2].map(i => `<i class="daily-dot${state.dailyClears > i ? ' done' : ''}"></i>`).join('')}<span>${state.dailyClears}/3面</span></div>
     </section>`);
   }
@@ -548,7 +566,7 @@
     state.device = device; document.body.dataset.device = device; save(); sound('tap');
     document.querySelectorAll('.device-choice').forEach(button => { const selected = button.dataset.device === device; button.classList.toggle('selected',selected); button.setAttribute('aria-pressed',String(selected)); });
   }
-  function resetAttempt() { state.completed = []; state.mistakes = 0; save(); }
+  function resetAttempt(newFlags = false) { state.completed = []; state.mistakes = 0; if (newFlags) state.flagOffer = []; save(); }
 
   document.addEventListener('click', async event => {
     const target = event.target.closest('[data-action]');
@@ -576,27 +594,16 @@
       return;
     }
     if (action === 'activity-back') { renderMap(); return; }
-    if (action === 'retry-mission') { resetAttempt(); showLoading(renderMissionSelect,850); return; }
+    if (action === 'retry-mission') { resetAttempt(true); showLoading(renderMissionSelect,850); return; }
     if (action === 'next-mission') {
+      const wonFlag = selectedFlagItem();
+      state.flagCollection[wonFlag.code] = Number(state.flagCollection[wonFlag.code] || 0) + 1;
       state.dailyClears += 1;
       state.internalMission += 1;
-      resetAttempt();
+      resetAttempt(true);
       showLoading(renderMissionSelect,850);
       return;
     }
-  });
-
-  document.addEventListener('input', event => {
-    if (event.target.id !== 'flagSearch') return;
-    const query = event.target.value.trim().toLowerCase();
-    let visible = 0;
-    document.querySelectorAll('.flag-card').forEach(card => {
-      const show = !query || card.dataset.search.includes(query);
-      card.hidden = !show;
-      if (show) visible += 1;
-    });
-    const empty = document.querySelector('.flag-empty');
-    if (empty) empty.hidden = visible !== 0;
   });
 
   settingsDialog.addEventListener('click',event => {
@@ -617,7 +624,7 @@
   window.addEventListener('blur',() => { activePointers.forEach(point => point.bead.classList.remove('pressed')); activePointers.clear(); });
   document.addEventListener('gesturestart',event => event.preventDefault(),{passive:false});
   document.addEventListener('touchmove',event => { if (event.touches.length > 1) event.preventDefault(); },{passive:false});
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js?v=5'));
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js?v=6'));
 
   renderStart();
 })();
