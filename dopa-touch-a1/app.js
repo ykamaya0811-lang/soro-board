@@ -229,7 +229,7 @@
   function renderStart() {
     setScreen(`<section class="screen start-screen star-bg">
       <div class="top-tools"><button class="aqua-button" data-action="settings">Settings</button><button class="aqua-button" data-action="parent">Parent/Guardian</button></div>
-      <img class="brand-logo" src="assets/dopatouch-logo.png" alt="DopaTouch">
+      <img class="brand-logo" src="assets/dopatouch-logo.png?v=9" alt="DopaTouch">
       <button class="start-name" data-action="settings">${escapeHTML(state.name)}</button>
       <div class="device-chooser"><div class="device-label">使用する端末を選んでください</div>${deviceButtons()}</div>
       <button class="start-button" data-action="start">START</button>
@@ -624,7 +624,7 @@
   window.addEventListener('blur',() => { activePointers.forEach(point => point.bead.classList.remove('pressed')); activePointers.clear(); });
   document.addEventListener('gesturestart',event => event.preventDefault(),{passive:false});
   document.addEventListener('touchmove',event => { if (event.touches.length > 1) event.preventDefault(); },{passive:false});
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js?v=8'));
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',() => navigator.serviceWorker.register('./sw.js?v=9'));
 
   renderStart();
 })();
